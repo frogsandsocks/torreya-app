@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Class-Path: jssc-2.9.1.jar jssc-2.9.1-javadoc.jar tornadofx-1.7.17.jar
+  kotlin-stdlib-jdk8-1.2.60.jar kotlin-stdlib-jdk7-1.2.60.jar kotlin-r
+ eflect-1.2.60.jar kotlin-stdlib-1.2.60.jar javax.json-1.1.2.jar kotli
+ n-stdlib-common-1.2.60.jar annotations-13.0.jar javax.json-api-1.1.2.
+ jar
+Main-Class: com.example.demo.app.MyApp
+
