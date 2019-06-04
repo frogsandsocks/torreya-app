@@ -5,6 +5,7 @@ import javafx.scene.layout.BorderStrokeStyle
 
 import javafx.scene.paint.Color
 import tornadofx.*
+import torreya.app.Axis
 import torreya.app.PrinterControl
 import torreya.app.TorreyaStyles
 import torreya.app.controller
@@ -15,6 +16,63 @@ import java.lang.NumberFormatException
 class TorreyaMainView : View("Torreya") {
 
     private val printer = controller.createSerialCommunicator()
+
+    private var textFieldAxisX = textfield {
+
+        bind(controller.positionX)
+
+        isEditable = false
+
+        addClass(TorreyaStyles.textFieldCoordinates)
+
+        textProperty().addListener { _, _, new ->
+
+            try {
+                controller.positionX.set(new)
+                printer.moveXByCoordinates(controller
+                        .positionX
+                        .toString()
+                        .removeSurrounding("StringProperty [value: ", "]")
+                        .toInt())
+            } catch (e: NumberFormatException) { println("Nope!") }
+        }
+    }
+
+    private var textFieldAxisY = textfield {
+
+        textfield("???") {
+
+            isEditable = false
+
+            addClass(TorreyaStyles.textFieldCoordinates)
+
+            textProperty().addListener { _, _, new ->
+
+                try {
+                    printer.extrudeTemperatureUpdate(new.toInt())
+                } catch (e: NumberFormatException) {
+                }
+            }
+        }
+    }
+
+    private var textFieldAxisZ = textfield {
+
+        textfield("???") {
+
+            isEditable = false
+
+            addClass(TorreyaStyles.textFieldCoordinates)
+
+            textProperty().addListener { _, _, new ->
+
+                try {
+                    printer.extrudeTemperatureUpdate(new.toInt())
+                } catch (e: NumberFormatException) {
+                }
+            }
+        }
+    }
 
 
     override val root = vbox {
@@ -46,8 +104,15 @@ class TorreyaMainView : View("Torreya") {
                 button("↓") { gridpaneConstraints { columnRowIndex(2, 3) } }
 
                 button("HOME\nALT") {
+
                     gridpaneConstraints { columnRowIndex(2, 2) }
-                    action { printer.moveHome() }
+
+                    action {
+
+                        printer.moveHome()
+
+                        textFieldAxisX.isEditable = true
+                    }
                 }
 
                 button("EXT\n ⇡") {
@@ -59,7 +124,6 @@ class TorreyaMainView : View("Torreya") {
                     gridpaneConstraints { columnRowIndex(1, 3) }
                     action { printer.extrudeOut() }
                 }
-
 
                 children.filter { it is Button }.addClass(TorreyaStyles.buttonArrow)
 
@@ -77,13 +141,26 @@ class TorreyaMainView : View("Torreya") {
                         addClass(TorreyaStyles.boxCoordinates)
 
                         label("X position") { addClass(TorreyaStyles.textFieldCoordinatesName) }
+
+                        /*
                         label("12.34") {
                             addClass(TorreyaStyles.textFieldCoordinates)
                             useMaxWidth = true
                         }
+
+                         */
+
+                        add(textFieldAxisX)
                     }
 
-                    button("HOME\nX") { addClass(TorreyaStyles.buttonArrow) }
+                    button("HOME\nX") {
+
+                        addClass(TorreyaStyles.buttonArrow)
+                        action {
+
+                            printer.moveHomeOneAxis(Axis.X)
+                        }
+                    }
                 }
 
 
@@ -100,7 +177,10 @@ class TorreyaMainView : View("Torreya") {
                         }
                     }
 
-                    button("HOME\nY") { addClass(TorreyaStyles.buttonArrow) }
+                    button("HOME\nY") {
+                        addClass(TorreyaStyles.buttonArrow)
+                        action { printer.moveHomeOneAxis(Axis.Y) }
+                    }
                 }
 
 
@@ -117,7 +197,10 @@ class TorreyaMainView : View("Torreya") {
                         }
                     }
 
-                    button("HOME\nZ") { addClass(TorreyaStyles.buttonArrow) }
+                    button("HOME\nZ") {
+                        addClass(TorreyaStyles.buttonArrow)
+                        action { printer.moveHomeOneAxis(Axis.Z) }
+                    }
                 }
             }
         }
@@ -171,22 +254,21 @@ class TorreyaMainView : View("Torreya") {
                 }
             }
 
-            button("HBED\nON") { addClass(TorreyaStyles.buttonArrow) }
+            button("BED\nON") { addClass(TorreyaStyles.buttonArrow) }
         }
 
 
         hbox {
 
             useMaxWidth = true
+
             addClass(TorreyaStyles.boxTemperatureConfiguration)
 
             vbox {
 
-                useMaxWidth = true
-
                 hbox {
 
-                    useMaxWidth = true
+
                     style { padding = box(5.px) }
 
                     label("Extruder  ") { addClass(TorreyaStyles.textFieldCoordinatesName) }
@@ -224,6 +306,7 @@ class TorreyaMainView : View("Torreya") {
 
             button("EXT\nON") { addClass(TorreyaStyles.buttonArrow) }
         }
+
 
     }
 }

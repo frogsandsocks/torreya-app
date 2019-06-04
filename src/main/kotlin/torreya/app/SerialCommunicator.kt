@@ -26,7 +26,7 @@ class SerialCommunicator {
 
         for (port in SerialPortList.getPortNames()) {
 
-            ports += (port ?: throw Exception("AAAAAAAAAAAAAAAAAAAAAA"))
+            ports += (port ?: throw Exception())
         }
 
         return ports

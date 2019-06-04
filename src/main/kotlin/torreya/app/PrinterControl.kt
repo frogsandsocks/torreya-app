@@ -33,14 +33,19 @@ class PrinterControl {
         serialCommunicator.println("G91\nG1 " + (if(!toRight) "-" else "") + "X1 F3600")
     }
 
+    fun moveXByCoordinates(coordinates: Int) {
+
+        serialCommunicator.println("G90")
+        serialCommunicator.println("G1 X$coordinates F3600")
+    }
+
     fun moveY() {}
 
     fun moveZ() {}
 
-    fun moveHome() {
+    fun moveHomeOneAxis(axis: Axis) { serialCommunicator.println("G28 $axis") }
 
-        serialCommunicator.println("G28")
-    }
+    fun moveHome() { serialCommunicator.println("G28") }
 
     fun hotbedOn(state: Boolean) {}
 

@@ -1,7 +1,9 @@
 package torreya.app
 
 import javafx.beans.property.ObjectProperty
+import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.beans.property.StringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
@@ -14,6 +16,8 @@ class TorreyaController {
 
     val serialCommunicator = SerialCommunicator()
 
+
+    var positionX = SimpleStringProperty("???")
 
     val app = TorreyaApp()
 
